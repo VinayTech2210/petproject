@@ -1,5 +1,3 @@
-FROM openjdk:17.0.2
-COPY . /usr/src/myapp
-WORKDIR /usr/src/myapp
-RUN ./mvnw clean package
-CMD ./mvnw cargo:run -P tomcat90
+FROM tomcat:9.0.90-jdk17
+COPY target/*.war /usr/local/tomcat/webapps/petsstore.war
+EXPOSE 8080
