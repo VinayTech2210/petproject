@@ -1,0 +1,6 @@
+projectKey=petsstore
+serverUrl=http://20.64.227.137:8082
+serverVersion=9.9.8.100196
+dashboardUrl=http://20.64.227.137:8082/dashboard?id=petsstore
+ceTaskId=AZy8nwGhb1UzVLd71nQw
+ceTaskUrl=http://20.64.227.137:8082/api/ce/task?id=AZy8nwGhb1UzVLd71nQw
