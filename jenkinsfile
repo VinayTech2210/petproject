@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk'
+        maven 'maven3'
+    }
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+    }
+
+    stages {
+
+        stage('Git Clone') {
+            steps {
+                git 'https://github.com/VinayTech2210/petproject.git'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                sh """
+                $SCANNER_HOME/bin/sonar-scanner \
+                -Dsonar.host.url=http://20.64.227.137:8082 \
+                -Dsonar.login=squ_2b3d0173c1c2481e21163ad87d000f4e53fb53a5 \
+                -Dsonar.projectName=Projectpets \
+                -Dsonar.projectKey=Projectpets \
+                -Dsonar.java.binaries=.
+                """
+            }
+        }
+      stage('Build and compile'){
+          steps{
+              sh '''mvn clean package'''
+          }
+      }
+           stage('Build and push docker image'){
+               steps{
+                   script{
+                       withDockerRegistry(credentialsId: 'd6f20fb8-a596-4467-9c2d-ee788c379e69') {
+                       sh 'docker build -t kingpetstore . '
+                       sh ' docker tag kingpetstore vinnu2211/kingpetstore:latest'
+                       sh ' docker push vinnu2211/kingpetstore:latest'
+}
+                   }
+               }
+           }
+           stage('Deploy the application'){
+               steps{
+                   script{
+                       sh ' docker run -d --name kingpetstore -p 1111:8080 vinnu2211/kingpetstore:latest'
+                   }
+               }
+           }
+    }
+}
